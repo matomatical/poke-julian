@@ -1,11 +1,7 @@
 from selenium import webdriver
 import time, getpass
 
-def snap(browser, tag):
-    """log the state of browser to tag.html and tag.png"""
-    with open(tag + ".html", 'w') as htmlfile:
-        htmlfile.write(browser.page_source)
-    browser.save_screenshot(tag + ".png")
+
 
 def main():
     # launch browser
@@ -57,13 +53,18 @@ def main():
             time.sleep(7)
 
         else:
-            # no, wait a while and then refresh the page
-            time.sleep(30)
+            # no, wait a minute and then refresh the page
+            time.sleep(60)
             browser.refresh()
             print("refreshing...")
 
     browser.quit()
 
+def snap(browser, tag):
+    """log the state of browser to tag.html and tag.png"""
+    with open(tag + ".html", 'w') as htmlfile:
+        htmlfile.write(browser.page_source)
+    browser.save_screenshot(tag + ".png")
     
 def get_login():
     """get login credentials from a file, or from the user if file is missing"""
