@@ -9,7 +9,7 @@ def main():
     browser.set_window_size(800, 600)
 
     # login to facebook
-    browser.get("http://www.facebook.com")
+    browser.get("http://m.facebook.com")
     # snap(browser, "1-login")
     email, password = get_login()
 
@@ -22,9 +22,10 @@ def main():
     print("logged in!") # hopefully that worked...
     # snap(browser, "2-logged-in")
     
+    time.sleep(2)
 
     # okay, now go to the poke page
-    browser.get("http://www.facebook.com/pokes")
+    browser.get("http://m.facebook.com/pokes")
     # snap(browser, "3-pokes")
 
 
@@ -32,18 +33,27 @@ def main():
     while True:
         
         # find all pokes
-        poke_area = browser.find_element_by_id("contentArea")
-        all_pokes = poke_area.find_elements_by_xpath("./div/div/div/div")
-        pokes = [e for e in all_pokes if 'poke_live_item' in e.get_attribute('id')]
+        poke_area = browser.find_element_by_id("poke_area")
+        all_pokes = poke_area.find_elements_by_tag_name("article")
+        pokes = [e for e in all_pokes if 'poke_live' in e.get_attribute('id')]
+        # or:
+        # pokes = []
+        # for poke in all_pokes:
+        #     if not poke.find_elements_by_tag_name("h3"):
+        #         pokes.append(poke)
+        #     else:
+        #         break
 
         julian = None
         for poke in pokes:
-            person = poke.find_element_by_xpath("./div/div/div/div/div/div/a").text
-            if person == "Julian Tran":
-                buttons = poke.find_elements_by_partial_link_text("Poke back")
-                if buttons:
-                    julian = buttons[0]
-                break
+            elements = poke.find_elements_by_xpath("./div/div/div/div/div/div/div/a")
+            if len(elements) > 1:
+                person = elements[0].text
+                button = elements[1]
+
+                if person == "Julian Tran":
+                    julian = button
+                    break
 
         # did we find julian?
         if julian:
